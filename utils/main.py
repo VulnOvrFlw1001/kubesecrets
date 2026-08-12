@@ -34,7 +34,7 @@ def handler():
             }
         return json.dumps(response)
     except Exception as e:
-        return f"Internal Server Error", 500
+        return f"Internal Server Error: {e}", 500
     
 def db_search(username,password):
     try:
