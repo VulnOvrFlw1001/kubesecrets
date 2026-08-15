@@ -187,3 +187,8 @@ resource "google_compute_firewall" "firewall" {
     target_tags = each.value.target_tags
 }
 
+resource "google_service_account" "sql_operator_service_account" {
+    account_id = "gcp-sq-operator"
+    display_name = "gcp-sql-operator"
+}
+

@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: deployment
+metadata:
+  name: gcp-sql-operator
+  labels:
+  app: gcp-sql-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gcp-sql-operator 
+  template:
+    metadata:
+      labels:
+        app: gcp-sql-operator 
+    spec:
+      serviceAccountName: cloudsql-operator-sa 
+      containers:
+      - name: operator
+        image: docker.io/devopsheros137/controller:0.1.0
+        volumeMounts:
+          - name: gcp-key
+            mountPath: /var/secrets/google
+            readonly: true
+      volumes:
+        - name: gcp-key
+          secret:
+            secretName: gcp-service-account
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cloudsql-operator-sa
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cloudsql-operator-role 
+rules:
+  - apiGroups: ["sql.gcp"]
+    resources: ["cloudsqlinstances"]
+    verbs: ["*"]
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cloudsql-operator-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cloudsql-operator-role
+subjects:
+  - kind: ServiceAccount
+    name: cloudsql-operator-sa
+    namespace: default

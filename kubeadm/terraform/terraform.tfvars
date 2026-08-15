@@ -1,8 +1,8 @@
-gcp_project = "kubernetes-security-505302"
-key_path = "C:\\Users\\hansj\\Downloads\\kubernetes-security.json"
+gcp_project = "kubernetes-security-xxx"
+key_path = "C:\\Users\\xxx\\Downloads\\kubernetes-security.json"
 project_zone = "us-central1-a"
-ssh_path = "C:\\Users\\hansj\\.ssh/kubeadm.pub"
-ssh_private_key_path = "C:\\Users\\hansj/.ssh/kubeadm"
+ssh_path = "C:\\Users\\xxx\\.ssh/kubeadmxxx.pub"
+ssh_private_key_path = "C:\\Users\\xxx/.ssh/kubeadmxxx"
 
 region = "us-central1"
 instances_names = [ "my-machine", "control-plane", "worker-node", "webhook-server", "worker-node-1" ]
