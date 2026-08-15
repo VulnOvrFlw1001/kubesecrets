@@ -1,0 +1,47 @@
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: InitConfiguration
+nodeRegistration:
+  name: "control-plane"
+  criSocket: "unix://var/run/crio/crio.sock"
+  taints:
+    - key: "control"
+      value: "true"
+      effect: "NoSchedule"
+  imagePullPolicy: "IfNotPresent"
+localAPIEndpoint:
+  advertiseAddress: "10.10.0.17"
+  bindPort: 6443
+---
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: ClusterConfiguration
+apiServer:
+  extraArgs:
+    authentication-token-webhook-config-file: /etc/auth-config.yaml
+    enable-admission-plugins: PodSecurity
+    admission-control-config-file: /etc/podsecurity.yaml
+  extraVolumes:
+  - name: authentication-token-webhook-config-file
+    mountPath: /etc/auth-config.yaml
+    hostPath: /home/hansj/kubeadm/auth-config.yaml
+  - name: admission-control-config-file
+    mountPath: /etc/prodsecurity.yaml
+    hostPath: /home/hansj/kubeadm/podsecurity.yaml
+kubernetesVersion: "v1.30.0"
+imageRepository: "registry.k8s.io"
+clusterName: "control-plane"
+
+scheduler: 
+  extraArgs:
+    config: /etc/scheduler.yaml
+    v: "11"
+  extraVolumes:
+  - name: kube-scheduler-config-file
+    mountPath: /etc/scheduler.yaml
+    hostPath: /home/hansj/kubeadm/scheduler.yaml
+
+controllerManager:
+  extraArgs:
+    concurrent-deployment-syncs: "7"
+    concurrent-staatefulset-syncs: "7"
+    concurrent-replicaset-syncs: "7"
+

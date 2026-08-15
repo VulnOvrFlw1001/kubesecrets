@@ -1,0 +1,8 @@
+apiVersion: sql.gcp/v1
+kind: CloudSQLInstance
+metadata:
+  name: postgres-cloud-sql-instance
+spec:
+  name: postgres-instance
+  instanceTier: db-f1-micro
+  dbVersion: POSTGRES_15

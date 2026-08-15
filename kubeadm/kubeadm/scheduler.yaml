@@ -1,0 +1,41 @@
+apiVersion: kubescheduler.config.k8s.io/v1
+kind: KubeSchedulerConfiguration
+clientConnection:
+  kubeconfig: /etc/kubernetes/scheduler.conf
+  contentType: "application/json"
+profiles:
+  - schedulerName: default-scheduler
+  - schedulerName: my-scheduler
+    plugins:
+      filter:
+        enabled:
+          - name: TaintToleration
+          - name: NodeName
+          - name: NodePorts
+          - name: NodeAffinity
+          - name: NodeUnschedulable
+          - name: VolumeBinding
+          - name: VolumeRestrictions
+          - name: VolumeZone
+          - name: NodeVolumeLimits
+          - name: GCEPDLimits
+        disabled:
+          - name: EBSLimits
+          - name: AzureDiskLimits
+          - name: InterPodAffinity
+          - name: PodTopologySpread
+          - name: NodeResourcesFit
+      score:
+        enabled:
+          - name: NodeResourcesFit
+            weight: 7
+          - name: NodeResourcesBalancedAllocation
+            weight: 4
+          - name: ImageLocality
+            weight: 10
+        disabled:
+          - name: TaintToleration
+          - name: NodeAffinity
+          - name: PodTopologySpread
+          - name: VolumeBinding
+          - name: InterPodAffinity

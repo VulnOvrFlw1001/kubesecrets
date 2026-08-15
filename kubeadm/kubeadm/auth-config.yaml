@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Config
+cluseters:
+  - name: control-plane
+    cluster:
+      server: http://10.10.0.15:5000
+      insecure-skip-tls-verify: true
+users:
+  - name: webhook-user
+contexts:
+  - context:
+      cluster: control-plane
+      user: webhook-user
+    name: auth
+current-context: auth
